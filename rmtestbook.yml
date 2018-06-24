@@ -1,0 +1,31 @@
+- hosts: all
+  become: yes
+  become_user: root
+  tasks:
+        - name: "Remove java"
+          yum:
+                name: java
+                state: absent
+
+        - name: "Remove tomcat"
+          yum:
+                 #name: tomcat,tomcat-webapps,tomcat-admin-webapps
+                 name: tomcat
+                 state: absent
+
+        - name: "Remove tomcat files"
+          shell: rm -r /usr/share/tomcat && rm -r /var/lib/tomcat
+          failed_when: no
+
+
+        - name: "Remove wget"
+          yum:
+                 name: wget
+                 state: absent
+
+        - name: "Revoke firewall"
+          shell: firewall-cmd --permanent --remove-service=tomcat && firewall-cmd --permanent --remove-service=http && firewall-cmd --reload
+        - name: "Revoke firewall for sure"
+          shell: rm -r /etc/firewalld/services/tomc* && firewall-cmd --reload
+          failed_when: no
+
