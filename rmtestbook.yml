@@ -14,7 +14,7 @@
                  state: absent
 
         - name: "Remove tomcat files"
-          shell: rm -rf /usr/share/tomcat && rm -r /var/lib/tomcat
+          shell: rm -rf /usr/share/tomcat && rm -r /var/lib/tomcat && rm -r /var/log/tomcat
           failed_when: no
 
 
