@@ -26,7 +26,7 @@
                  update_cache: yes
 
         - name: "Fetch jenkins.war"
-          shell: cd /var/lib/tomcat/webapps && wget https://updates.jenkins-ci.org/latest/jenkins.war && chmod 755 /var/lib/tomcat/webapps/jenkins.war
+          shell: cd /var/lib/tomcat/webapps && sudo -u tomcat wget https://updates.jenkins-ci.org/latest/jenkins.war && chmod 755 /var/lib/tomcat/webapps/jenkins.war
 
 
         - name: "Prepare firewall"
