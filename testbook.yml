@@ -36,4 +36,4 @@
           shell: service tomcat start && chkconfig tomcat on
 
         - name: "Jenkins permissions ugly kostyling"
-          shell: usermod jenkins -G tomcat,jenkins,wheel && sudo -u tomcat mkdir /usr/share/tomcat/.jenkins && chmod 766 /usr/share/tomcat/.jenkins
+          shell: usermod jenkins -G tomcat,jenkins,wheel && sudo -u tomcat mkdir /usr/share/tomcat/.jenkins && chown -R jenkins:jenkins /usr/share/tomcat/.jenkins
