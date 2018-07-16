@@ -26,7 +26,7 @@
                  update_cache: yes
 
         - name: "Fetch jenkins.war"
-          shell: cd /var/lib/tomcat/webapps && wget https://updates.jenkins-ci.org/latest/jenkins.war
+          shell: cd /var/lib/tomcat/webapps && wget https://updates.jenkins-ci.org/latest/jenkins.war && chmod 755 /var/lib/tomcat/webapps/jenkins.war
 
 
         - name: "Prepare firewall"
@@ -35,5 +35,5 @@
         - name: "Start and enable tomcat by default"
           shell: service tomcat start && chkconfig tomcat on
 
-        - name: "Jenkins permissions ugly kostyling"
-          shell: usermod jenkins -G tomcat,jenkins,wheel && sudo -u tomcat mkdir /usr/share/tomcat/.jenkins && chown -R jenkins:jenkins /usr/share/tomcat/.jenkins
+        #- name: "Jenkins permissions ugly kostyling"
+        #  shell: usermod jenkins -G tomcat,jenkins,wheel && sudo -u tomcat mkdir /usr/share/tomcat/.jenkins && chown -R jenkins:jenkins /usr/share/tomcat/.jenkins
