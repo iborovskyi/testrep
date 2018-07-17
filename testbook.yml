@@ -14,10 +14,6 @@
                  name: tomcat
                  state: present
                  update_cache: yes
-
-        - name: "Jenkins permissions ugly kostyling"
-          #shell: usermod jenkins -G tomcat,jenkins,wheel && sudo -u tomcat mkdir /usr/share/tomcat/.jenkins && chown -R jenkins:jenkins /usr/share/tomcat/.jenkins
-          shell: sudo -u tomcat mkdir /usr/share/tomcat/.jenkins
           
         - name: "Configure tomcat port"
           shell: sed -i 's/8080/{{ tomcat_port }}/g' /etc/tomcat/server.xml
@@ -39,6 +35,7 @@
         - name: "Start and enable tomcat by default"
           shell: service tomcat start && chkconfig tomcat on
 
-        #- name: "Jenkins permissions ugly kostyling"
+        - name: "Jenkins permissions ugly kostyling"
+          shell: ln -s /var/lib/tomcat/webapps/jenkins /usr/share/tomcat/.jenkins
           #shell: usermod jenkins -G tomcat,jenkins,wheel && sudo -u tomcat mkdir /usr/share/tomcat/.jenkins && chown -R jenkins:jenkins /usr/share/tomcat/.jenkins
           #shell: usermod jenkins -G tomcat,jenkins,wheel && sudo -u tomcat mkdir /usr/share/tomcat/.jenkins
