@@ -1,0 +1,20 @@
+- name: configure and deploy the webservers and application code
+  hosts: webservers
+  remote_user: root
+
+  roles:
+    - httpd
+
+- name: deploy MySQL and configure the databases
+  hosts: dbservers
+  remote_user: root
+
+  roles:
+    - mariadb
+
+- name: Zabbix server
+  hosts: zabbix-servers
+  remote_user: root
+
+  roles:
+    - zabbix-server

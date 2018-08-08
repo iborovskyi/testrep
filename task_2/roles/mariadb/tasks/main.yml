@@ -1,0 +1,68 @@
+- name: Install MariaDB
+  #yum: name={{ item }} enablerepo=mariadb state=present
+  yum: name=mariadb-server state=present
+  with_items:
+    - MariaDB-server
+    - MariaDB-client
+
+- name: Install MySQLdb Python package for secure installations.
+  yum: name=MySQL-python state=present
+  #yum: name=python2-mysql state=present
+#  when: mysql_secure_installation
+#  #when: mysql_secure_installation and mysql_root_password is defined
+
+#- name: Install MySQLdb Python package for secure installations.
+#  shell: yum install MySQL-python
+#  #yum: name=python2-mysql state=present
+#  when: mysql_secure_installation
+
+- name: Add configuration
+  template: src={{ mysql_conf_tpl }} dest={{ mysql_conf_dir[ansible_distribution] }}/{{ mysql_conf_file }} owner=root group=root mode=0644
+  when: mysql_conf_tpl != 'change_me'
+  notify: restart mysql
+
+- name: Start and enable service
+  service: name=mariadb state=started enabled=yes
+
+
+# Set root password
+# UPDATE mysql.user SET Password=PASSWORD('mysecret') WHERE User='root';
+# FLUSH PRIVILEGES;
+
+- name: Set root Password
+  mysql_user: login_password=test check_implicit_admin=yes name=root host={{ item }} password=test state=present 
+  with_items:
+    - localhost
+    - 127.0.0.1
+    - ::1
+
+- name: Reload privilege tables
+  command: 'echo "test" | mysql -p -ne "{{ item }}"'
+  with_items:
+    - FLUSH PRIVILEGES
+  changed_when: False
+
+- name: Remove anonymous users
+  command: 'echo "test" | mysql -p -ne "{{ item }}"'
+  with_items:
+    - DELETE FROM mysql.user WHERE User=''
+  changed_when: False
+
+- name: Disallow root login remotely
+  command: 'echo "test" | mysql -p -ne "{{ item }}"'
+  with_items:
+    - DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1')
+  changed_when: False
+
+- name: Remove test database and access to it
+  command: 'echo "test" | mysql -p -ne "{{ item }}"'
+  with_items:
+    - DROP DATABASE IF EXISTS test
+    - DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%'
+  changed_when: False
+
+- name: Reload privilege tables
+  command: 'echo "test" | mysql -p -ne "{{ item }}"'
+  with_items:
+    - FLUSH PRIVILEGES
+  changed_when: False
